@@ -4,7 +4,7 @@
     
     
         
-    CREATE TABLE products (
+    CREATE TABLE products(
         id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
         productName varchar (500),
         productDescription varchar (500),

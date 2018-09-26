@@ -16,10 +16,11 @@ class RelatedItems extends Component {
   componentDidMount() {
     const id = window.location.search.replace(/\?id=/, '');
     if (id) {
-      fetch(`/product?id=${id}`)
+      fetch(`/product?id=${id}`) //grabs all the products on the page
         .then(response => response.json())
         .then(({ data }) => {
-          const listOfItems = [];
+          console.log(data)
+          const listOfItems = []; //
           let numOfItem = 6;
           if (data.length < 6) { numOfItem = data.length; }
           for (let i = 0; i < numOfItem; i += 1) {

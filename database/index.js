@@ -1,12 +1,12 @@
+//seeding for cloud purposes
 const faker = require('faker');
 const mysql = require('mysql');
 console.log(process.env)
 const connection = mysql.createConnection({
   // waitForConnections : true,
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  password: process.env.PASSWORD,
-  database: 'slideShowData',
+  host: 'localhost',
+  user: 'root',
+  database: 'slideShowData'
 });
 
 connection.connect((err) => {
@@ -45,7 +45,7 @@ const createTable = function () {
     const randomPrice = faker.commerce.price();
     const randomImageURL = randomImage();
     const randomRating = getRandomRating(list);
-    const randomReviewNumber = Math.floor((Math.random() * 1000) + 36);
+    const randomReviewNumber = Math.floor((Math.random() * 1000) + 36); //displayed on the page
     const randomBoolean = faker.random.boolean();
 
     const queryString = `INSERT INTO products (productName, productDescription, color, price, imageURL, rating, reviewNumber, isPrime)
