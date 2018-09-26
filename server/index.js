@@ -3,7 +3,7 @@ const cors = require('cors');
 
 
 const express = require('express');
-
+const bodyParser = require('body-parser');
 const app = express();
 app.use(cors());
 
@@ -18,7 +18,7 @@ app.use((req, res, next) => {
 
 app.get('/product', (req, res) => {
   console.log(req.query.id)
-  controllers.getRelated(req.query.id, (err, results) => {
+  controllers.getRelated(req.query.id, (err, results) => { //only retrieves from related items table
     if (err) {
       res.status(503).send(err);
     } else {
@@ -30,22 +30,40 @@ app.get('/product', (req, res) => {
   });
 });
 
-app.post('/add', (req, res) => { //will come in with data: look up express's way to have data... 
-  console.log("the body is:", req.body)
-  res.send("got here")
+app.post('/add',bodyParser(), (req, res) => { 
+  
+  var objectToInsert = Object.assign({reviewNumber: 0, rating: 0}, req.body);
+  
+  controllers.insertItem(objectToInsert, (err, results) => { //first insert the item 
+    if (err) {
+      res.send(err, null)
+    } else {
+      controllers.insertRelated((err, results) => { //if there is no error, insert related 
+        if (err) {
+          console.log("errorhere:", err); 
+        } else {
+          console.log("success:", results) //if there is no error, send us back this message 
+        }
+      })
+    }
+    res.send(results) //if we get no err, send us back a response from the DB
+  })
+       
 })
 
+app.patch('/update', bodyParser(), (req, res) => {
+  console.log("body:", req.body)
+  
+  controllers.updateItem(req.body, (err, results) => {
+    if(err) {
+      res.send(err)
+    } else {
+      res.status(200).send(results)
+    }
+  })
+  
+})
 
-
-// app.post('/add', (req, res) => { //is going to be recieving data and putting it into the DB
-//   controllers.addToDB(req.query.id, (err, results) => {
-//     if (err) {
-//       res.status(503).send(err);
-//     } else {
-//       return res.status(200).send("success")
-//     }
-//   });
-// })
 
 const PORT = 4043;
 app.listen(PORT, () => {
