@@ -1,6 +1,7 @@
 //seeding for cloud purposes
 const faker = require('faker');
 const mysql = require('mysql');
+const bodyParser = require('body-parser');
 const connection = mysql.createConnection({
   // waitForConnections : true,
   host: 'localhost',
@@ -92,10 +93,17 @@ const insertItem = (itemObj, callback) => {
 
 const insertRelated = (callback) => { //will simply be called anytime an item is inserted into the products table 
   //will need to do the above operations 
+  //to do this correctly: will need to grab the last inserted and make that the id;
   const amountRelatedItems = ((Math.random() * 38) + 6); //well aware this isn't all the items anymore...
   for (var i = 0; i < amountRelatedItems; i += 1) { //for each item generate a number 1 - 100
     const relatedTo = ((Math.random() * 100) + 1);
-    connection.query(`INSERT INTO similarProducts (productId, relatedItemId) values (${i}, ${relatedTo})`, 
+    connection.query(`SELECT MAX(id) from products;`, (err, results) => {
+      if(err) {
+        console.log(err)
+      } else {
+    var maxID = results[0]["MAX(id)"];
+   // console.log("inserted", maxID); //inserting into relatedproducts using the last inserted ID
+    connection.query(`INSERT INTO similarProducts (productId, relatedItemId) values (${maxID}, ${relatedTo})`, 
     (err, res) => {
       if(err) {
         callback(err, null);
@@ -104,6 +112,8 @@ const insertRelated = (callback) => { //will simply be called anytime an item is
       }
     })
   }
+})
+}
 }
 
 const updateItem = (updateObj, callback) => {
@@ -115,7 +125,7 @@ const updateItem = (updateObj, callback) => {
 
   for(var prop in updateObj) {
     if(prop === "isPrime") {
-      updateValuesQuery = updateValuesQuery.concat(prop + " = " + updateObj[prop] +  ", ") //isPrime is pure boolean
+      updateValuesQuery = updateValuesQuery.concat(prop + " = " + updateObj[prop] +  ", ") //isPrime is a pure boolean
     } else {
       updateValuesQuery = updateValuesQuery.concat(prop + " = " + "\"" + `${updateObj[prop]}` + "\"" + ", ")
     }
@@ -134,7 +144,30 @@ const updateItem = (updateObj, callback) => {
   //only updating the colums specified by the updateObject
 }
 
+
+const deleteFromProducts = (id, callback) => {
+  var query = `DELETE FROM PRODUCTS WHERE ID = ${id}`;
+  connection.query(query, (err, results) => {
+    if(err) {
+      callback(err);
+    } else { //also delete from the related table
+      console.log(results)
+      var secondQuery = `DELETE FROM similarProducts WHERE productId = ${id} or relatedItemId = ${id}`
+      connection.query(secondQuery, (err, results) => {
+        if(err) {
+          console.log(err);
+        } else {
+          callback(results);
+        }
+      })
+    }
+  })
+}
+
+
 module.exports.getRelated = getRelated;
 module.exports.insertRelated = insertRelated;
 module.exports.insertItem = insertItem;
 module.exports.updateItem = updateItem;
+module.exports.deleteFromProducts = deleteFromProducts;
+module.exports.deleteFromProducts = deleteFromProducts;

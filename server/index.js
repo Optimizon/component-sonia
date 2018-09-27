@@ -31,14 +31,24 @@ app.get('/product', (req, res) => {
 });
 
 app.post('/add',bodyParser(), (req, res) => { 
-  
+  console.log("Jesse", req.body)
+  //will come in with data... using require('request') 
+  //the body: 
+  //{
+  // productName: "bacon", 
+  // productDescription: "bacon to consume", 
+  // color: "red",
+  // price: 55,
+  // imageURL: "http://images/bacon.com", 
+  // isPrime: true
+  // }
+
   var objectToInsert = Object.assign({reviewNumber: 0, rating: 0}, req.body);
-  
   controllers.insertItem(objectToInsert, (err, results) => { //first insert the item 
     if (err) {
       res.send(err, null)
     } else {
-      controllers.insertRelated((err, results) => { //if there is no error, insert related 
+      controllers.insertRelated((err, results) => { //if there is no error, insert related using id that was created  
         if (err) {
           console.log("errorhere:", err); 
         } else {
@@ -63,6 +73,23 @@ app.patch('/update', bodyParser(), (req, res) => {
   })
   
 })
+
+app.delete('/remove',bodyParser(), function (req, res) {
+  //user will provide the id of the item being removed 
+  controllers.deleteFromProducts(req.body.id, (err, results) => {
+    if(err) {
+      res.send(err)
+    } else {
+      res.send(results);
+    }
+  })
+
+})
+
+//gonna have to updata both tables (do two queries)
+//Delete from related
+//Delete from similar products 
+//first delete all the entries with the 
 
 
 const PORT = 4043;
