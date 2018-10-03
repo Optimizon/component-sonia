@@ -25,3 +25,10 @@ build/
 
 .env
 
+##Data Files with 10 Million - 100 Mill Entries 
+fakeproductData
+
+database/DataGenerationScripts/similarDataGenPromises.js
+database/DataGenerationScripts/similarProductsGenPromises.js
+
+
