@@ -1,5 +1,4 @@
 var fs = require('fs');
-const faker = require('faker');
 
 const randomDescription = () => {
 	var sentences = [ 'Neque quod tempore temporibus doloremque ipsum doloremque nisi quod. Vitae earum enim provident. Odio expedita eum architecto aut eveniet voluptas suscipit. Et modi et est molestias. Voluptatem debitis atque ut dicta nemo adipisci eum. Repudiandae quis itaque ut architecto tempora omnis nesciunt.',

@@ -4,7 +4,7 @@ require('events').EventEmitter.prototype._maxListeners = 11;
 
 
 var csvWrite = csvWriter({ headers: ["id", "similarID"]});
-//var fileName = fileName = './similarItems3.csv'  //uncomment to run
+//var fileName = './similarItems3.csv'  //uncomment to run
 
 csvWrite.pipe(fs.createWriteStream(fileName, {'flags': 'a'}));
 
