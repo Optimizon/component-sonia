@@ -1,7 +1,6 @@
 //seeding for cloud purposes
 const faker = require('faker');
 const mysql = require('mysql');
-const bodyParser = require('body-parser');
 const connection = mysql.createConnection({
   // waitForConnections : true,
   host: 'localhost',

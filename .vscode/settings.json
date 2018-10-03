@@ -2,4 +2,5 @@
     "editor.tabSize": 2,
     "editor.formatOnSave ": true,
     "editor.insertSpaces": false,
+    "git.ignoreLimitWarning": true,
 }

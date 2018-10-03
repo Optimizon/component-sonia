@@ -1,66 +1,63 @@
-//used locally
-const faker = require('faker');
-const mysql = require('mysql');
+var pg = require('pg');
 
-const connection = mysql.createConnection({
-  host: 'localhost',
-  user: 'root',
-  database: 'slideShowData'
-});
+var conString = "postgresql://lisette@localhost:5432/amzproducts"; //connects to the db 
 
-connection.connect((err) => {
-  if (err) {
-    console.log(err);
-  } else {
-    console.log('DB connected!(Seed)');
+
+
+//psql "dbname=amzproducts options=--search_path=prodschema" -a -f postGres.sql
+
+var client = new pg.Client(conString);
+
+client.connect(function(err) {
+  if(err) {
+    return console.error('could not connect to postgres', err);
   }
+  client.query('SELECT NOW() AS "theTime"', function(err, result) {
+    if(err) {
+      return console.error('error running query', err);
+    }
+    console.log(result.rows[0].theTime);
+    //output: Tue Jan 15 2013 19:12:47 GMT-600 (CST)
+    client.end();
+  });
 });
 
-// function picks a random image from S3
-const randomImage = () => {
-  const imageList = ['https://s3-us-west-1.amazonaws.com/pictures-hrsf/download+(1).jpeg', 'https://s3-us-west-1.amazonaws.com/pictures-hrsf/download+(10).jpeg',
-    'https://s3-us-west-1.amazonaws.com/pictures-hrsf/download+(2).jpeg', 'https://s3-us-west-1.amazonaws.com/pictures-hrsf/download+(3).jpeg', 'https://s3-us-west-1.amazonaws.com/pictures-hrsf/download+(4).jpeg', 'https://s3-us-west-1.amazonaws.com/pictures-hrsf/download+(5).jpeg',
-    'https://s3-us-west-1.amazonaws.com/pictures-hrsf/download+(6).jpeg', 'https://s3-us-west-1.amazonaws.com/pictures-hrsf/download+(7).jpeg', 'https://s3-us-west-1.amazonaws.com/pictures-hrsf/download+(8).jpeg', 'https://s3-us-west-1.amazonaws.com/pictures-hrsf/download+(9).jpeg'];
-  const item = imageList[Math.floor(Math.random() * imageList.length)];
-  return item;
-};
-const list = [1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5];
-function getRandomRating() {
-  const rand = list[Math.floor(Math.random() * list.length)];
-  return rand;
+//this file will contain the functions for DB queries  
+//\copy { table | ( query ) } { from | to } { ‘filename’ } [ [ with ] ( option [, …] ) ]
+// get filenames
+var filePaths = ['/Users/lisette/products1.csv', '/Users/lisette/products2.csv']; //I moved the files to where postgreSql is running 
+
+// import the files
+for(var i = 0; i < filePaths.length; i++) {
+  client.query(`COPY prodschema.products from '${filePaths[i]}' WITH DELIMITER ',' CSV HEADER;`, (err, res) => {
+    if(err) {
+      return console.error('error running query', err);
+    } else {
+      console.log(res);
+    }
+  })
 }
 
-const DATA_NUMBER = 100;
-const createTable = function () {
-  for (let i = 0; i < DATA_NUMBER; i += 1) {
-    const randomName = faker.commerce.productName();
-    const randomDescription = faker.lorem.sentences();
-    const randomColor = faker.commerce.color();
-    const randomPrice = faker.commerce.price();
-    const randomImageURL = randomImage();
-    const randomRating = getRandomRating(list);
-    const randomReviewNumber = Math.floor((Math.random() * 1000) + 36);
-    const randomBoolean = faker.random.boolean();
 
-    const queryString = `INSERT INTO products (productName, productDescription, color, price, imageURL, rating, reviewNumber, isPrime)
-                            VALUES ("${randomName}", "${randomDescription}", "${randomColor}", "${randomPrice}", "${randomImageURL}", ${randomRating}, ${randomReviewNumber}, ${randomBoolean})`;
-    connection.query(queryString);
-    console.log('entering query');
-  }
-};
-// preventing the funtion from running more than once
-createTable();
+var similarfilePaths = ['/Users/lisette/similarItems1.csv', '/Users/lisette/similarItems2.csv', '/Users/lisette/similarItems3.csv', '/Users/lisette/similarItems4.csv', '/Users/lisette/similarItems5.csv']; //I moved the files to where postgreSql is running 
 
-const getRelatedItems = () => {
-  for (let i = 1; i <= 100; i += 1) {
-    const relatedItems = ((Math.random() * 38) + 6); // two random numbers to generate number of related items
-    for (let j = 0; j < relatedItems; j += 1) {
-      const relatedTo = ((Math.random() * 100) + 1);
-      connection.query(`INSERT INTO similarProducts (productId, relatedItemId) values (${i}, ${relatedTo})`);
+// import the files
+for(var i = 0; i < similarfilePaths.length; i++) {
+  client.query(`COPY prodschema.similaritems from '${similarfilePaths[i]}' WITH DELIMITER ',' CSV HEADER;`, (err, res) => {
+    if(err) {
+      return console.error('error running query', err);
+    } else {
+      console.log(res);
     }
-  }
-};
+  })
+}
 
-getRelatedItems();
+//CREATE INDEX idex_name ON table_name USING btree(column1, column2);
+//CREATE INDEX IF NOT EXISTS indexid ON prodschema.products USING btree(id);
 
-module.exports.getRelatedItems = getRelatedItems;
+//CREATE INDEX idindex ON prodschema.similaritems USING btree(id);
+
+//psql -U lisette -d amzproducts -c ` + "\\" + `
+//id, productName,productDescription, color, price, imageURL, rating, reviewNumber, isPrime
+
+//\COPY prodschema.similaritems from '/Users/lisette/similarItems2.csv' WITH DELIMITER ',' CSV HEADER;

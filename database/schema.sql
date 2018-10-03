@@ -20,5 +20,5 @@
     CREATE TABLE similarProducts (
         productId INT,
         relatedItemId INT
-    )
+    );
 
