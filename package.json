@@ -17,8 +17,9 @@
     "allocate": "node --max-old-space-size=8000 ./database/dataGen.js",
     "generateCSV": "./database/DataGenerationScripts/generateCSV/generateCSVProducts.sh",
     "generateJSON": "./database/DataGenerationScripts/generateJSON/generateJSONProducts.sh",
-    "seedPost": "node ./database/seed.js",
-    "seedMongo": "node ./database/mongoose.js && mongoimport --jsonArray --db amazon --collection products --type json --file ./fakeProductData/asJson/productsWithSimilar1.json && mongoimport --jsonArray --db amazon --collection products --type json --file ./fakeProductData/asJson/productsWithSimilar2.json && mongoimport --jsonArray --db amazon --collection products --type json --file ./fakeProductData/asJson/productsWithSimilar3.json && mongoimport --jsonArray --db amazon --collection products --type json --file ./fakeProductData/asJson/productsWithSimilar4.json"
+    "seedyPost": "node ./database/seed.js",
+    "seedMongo": "node ./database/mongoose.js && mongoimport --jsonArray --db amazon --collection products --type json --file ./fakeProductData/asJson/productsWithSimilar1.json && mongoimport --jsonArray --db amazon --collection products --type json --file ./fakeProductData/asJson/productsWithSimilar2.json && mongoimport --jsonArray --db amazon --collection products --type json --file ./fakeProductData/asJson/productsWithSimilar3.json && mongoimport --jsonArray --db amazon --collection products --type json --file ./fakeProductData/asJson/productsWithSimilar4.json",
+    "seedPost": "psql -U lisette postgres -c 'create database amzproducts'  && psql 'dbname=amzproducts options=--search_path=prodschema' -a -f postGres.sql"
   },
   "jest": {
     "verbose": true,

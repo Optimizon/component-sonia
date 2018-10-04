@@ -2,8 +2,6 @@ var pg = require('pg');
 
 var conString = "postgresql://lisette@localhost:5432/amzproducts"; //connects to the db 
 
-
-
 //psql "dbname=amzproducts options=--search_path=prodschema" -a -f postGres.sql
 
 var client = new pg.Client(conString);
@@ -51,6 +49,8 @@ for(var i = 0; i < similarfilePaths.length; i++) {
     }
   })
 }
+
+
 
 //CREATE INDEX idex_name ON table_name USING btree(column1, column2);
 //CREATE INDEX IF NOT EXISTS indexid ON prodschema.products USING btree(id);
