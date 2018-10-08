@@ -49,7 +49,7 @@ const createTable = function () {
   }
 };
 // preventing the funtion from running more than once
-createTable();
+//createTable();
 
 const getRelatedItems = () => {
   for (let i = 1; i <= 100; i += 1) {

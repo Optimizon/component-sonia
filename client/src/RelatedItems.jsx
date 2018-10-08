@@ -17,16 +17,17 @@ class RelatedItems extends Component {
     const id = window.location.search.replace(/\?id=/, '');
     if (id) {
       fetch(`/product?id=${id}`) //grabs all the products on the page
-        .then(response => response.json())
-        .then(({ data }) => {
+        .then(response => {
+          return response.json()})
+        .then(({data}) => {
+          // data = JSON.parse(data)
           console.log(data)
-          const listOfItems = []; //
+          const listOfItems = []; 
           let numOfItem = 6;
           if (data.length < 6) { numOfItem = data.length; }
           for (let i = 0; i < numOfItem; i += 1) {
             listOfItems.push(data[i]);
           }
-
           this.setState({
             products: data,
             pageProducts: listOfItems,
@@ -90,6 +91,7 @@ class RelatedItems extends Component {
 
   render() {
     const { products, pageProducts, pageNum } = this.state;
+    console.log(products.data)
     return (
       <div>
         <span className={styles.page}>

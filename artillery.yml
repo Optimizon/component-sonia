@@ -1,0 +1,41 @@
+config:
+  ensure:
+    maxErrorRate: 1
+  target: 'http://localhost:4043'
+  phases:
+  # warmup phase 
+    - duration: 20
+      arrivalRate: 200
+    
+
+  # ramps up to 500 users arriving per second over 120 seconds (maybe there's a sale...)
+    # - duration: 2
+    #   arrivalRate: 5
+    #   rampTo: 3000
+  # payload:
+  #   path: "keywords.csv"
+  #   fields:
+  #     - "keywords"        
+scenarios:
+  - flow:
+    - get:
+        url: "/product/?id={{$randomNumber(1, 100000)}}"
+    - get:
+        url: "/product/?id={{$randomNumber(1, 100000)}}"
+    - get:
+        url: "/product/?id={{$randomNumber(1, 100000)}}"
+
+# config:
+#   target: "https://staging1.local"
+#   phases:
+#     - duration: 60
+#       arrivalRate: 5
+#     - duration: 120
+#       arrivalRate: 5
+#       rampTo: 50
+#     - duration: 600
+#       arrivalRate: 50
+#   payload:
+#     path: "keywords.csv"
+#     fields:
+#       - "keywords"

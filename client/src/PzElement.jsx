@@ -44,36 +44,39 @@ const isPrime = (booleanNum) => {
 
 // function shortens product discription:
 
-const lessWord = str => ((str.length > 50) ? str.split('').slice(0, 50).join('') : str);
+const lessWord = (str) => ((str.length > 50) ? str.split('').slice(0, 50).join('') : str);
 
 // =============================================
 
 
-const PzElement = props => (
+const PzElement = props => {
+  console.log("props", props)
+  return (
+    
   <div className={styles.child}>
-    <img alt="product" className={styles.element} src={props.element.imageURL} />
+    <img alt="product" className={styles.element} src={props.element.imageurl} />
     <div className={styles.text}>
-      {lessWord(props.element.productDescription)}
+      {lessWord(props.element.productdescription)}
       {'...'}
     </div>
     <div className={styles.star}>
       <span>{starMaker(props.element.rating)}</span>
       {' '}
       <span className={styles.review}>
-        {props.element.reviewNumber}
+        {props.element.reviewnumber}
       </span>
     </div>
     <div>
       <span className={styles.price}>
       $
         {props.element.price}
-      .00
       </span>
       {' '}
-      <span>{isPrime(props.element.isPrime)}</span>
+      <span>{isPrime(props.element.isprime)}</span>
     </div>
   </div>
-);
+  )
+};
 
 
 export default PzElement;
