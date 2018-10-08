@@ -32,3 +32,5 @@ database/DataGenerationScripts/similarDataGenPromises.js
 database/DataGenerationScripts/similarProductsGenPromises.js
 database/DataGenerationScripts/generateCSV/generateSimilar6CSV.js
 database/DataGenerationScripts/generateJSON/generateProductsJSON.js
+
+scratch.js
