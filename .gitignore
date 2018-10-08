@@ -34,3 +34,4 @@ database/DataGenerationScripts/generateCSV/generateSimilar6CSV.js
 database/DataGenerationScripts/generateJSON/generateProductsJSON.js
 
 scratch.js
+newrelic.js
