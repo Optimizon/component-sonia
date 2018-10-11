@@ -3,10 +3,12 @@ config:
     maxErrorRate: 1
   target: 'http://localhost:4043'
   phases:
-  # warmup phase 
-    - duration: 20
-      arrivalRate: 200
-    
+    - duration: 60
+      arrivalRate: 5
+    #   rampTo: 2000
+    # - duration: 60
+    #   arrivalRate: 3500
+
 
   # ramps up to 500 users arriving per second over 120 seconds (maybe there's a sale...)
     # - duration: 2
@@ -18,12 +20,15 @@ config:
   #     - "keywords"        
 scenarios:
   - flow:
-    - get:
-        url: "/product/?id={{$randomNumber(1, 100000)}}"
-    - get:
-        url: "/product/?id={{$randomNumber(1, 100000)}}"
-    - get:
-        url: "/product/?id={{$randomNumber(1, 100000)}}"
+    - loop: 
+      - get:
+          url: "/product/{{ $randomNumber(1, 10000) }}"
+      - get:
+          url: "/product/{{ $randomNumber(10000, 20000) }}"
+      - get:
+          url: "/product/{{ $randomNumber(20000, 30000) }}"
+        count: 500
+   
 
 # config:
 #   target: "https://staging1.local"

@@ -19,21 +19,17 @@ CREATE TABLE prodschema.similaritems (
 	similarID INTEGER
 );
 
+
+\COPY prodschema.products from '../fakeProductData/asCSV/products1.csv' WITH DELIMITER AS ',' CSV HEADER;
+\COPY prodschema.products from '../fakeProductData/asCSV/products2.csv' WITH DELIMITER AS ',' CSV HEADER;
+
+\COPY prodschema.similaritems from '../fakeProductData/asCSV/similarItems1.csv' WITH DELIMITER AS ',' CSV HEADER;
+\COPY prodschema.similaritems from '../fakeProductData/asCSV/similarItems2.csv' WITH DELIMITER AS ',' CSV HEADER;
+\COPY prodschema.similaritems from '../fakeProductData/asCSV/similarItems3.csv' WITH DELIMITER AS ',' CSV HEADER;
+\COPY prodschema.similaritems from '../fakeProductData/asCSV/similarItems4.csv' WITH DELIMITER AS ',' CSV HEADER;
+\COPY prodschema.similaritems from '../fakeProductData/asCSV/similarItems5.csv' WITH DELIMITER AS ',' CSV HEADER;
+
+
 CREATE INDEX idindex ON prodschema.similaritems USING btree(id);
 CREATE INDEX indexid ON prodschema.products USING btree(id);
--- psql "dbname=amzproducts options=--search_path=prodschema" -a -f postGres.sql
 
--- psql - < postGres.sql
-
--- psql -U lisette -d amzproducts -a -f "postGres.sql"
--- INSERT INTO prodschema.products ("testShirt", "its just a shirt", "red", 126.78, "www.http:getalife.com", 6.5, 4, "true");
-
-
--- DELETE FROM prodschema.products WHERE id=10000001;
-
--- INSERT INTO prodschema.products(productName, productDescription, color, price, imageURL, rating, reviewNumber, isPrime) values ('shirt10000001','a shirt', 'red', 184.26, 'www', 4, 5, true);
-
-
--- SELECT * FROM prodschema.products INNER JOIN prodschema.similaritems ON similaritems.similarID = products.id WHERE similaritems.id = 9898989;
-
--- SELECT prodschema.products .* FROM prodschema.products INNER JOIN prodschema.similaritems ON (products.id = similaritems.similarID) AND similaritems.id=7878981;

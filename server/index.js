@@ -1,17 +1,25 @@
 require('newrelic');
 require('dotenv').config();
 const cors = require('cors');
-
-
+//const client = require('./redisFile.js')  //Going to connect to Redis 
+const postgres = require('../database/connection.js');
 const express = require('express');
 const bodyParser = require('body-parser');
 const app = express();
+// var proxy = require('http-proxy-middleware');
+postgres.connect((err) => {
+  if (err) return console.log(err);
+  console.log('Connected to postgres')
+})
 app.use(cors());
+
 
 //const controllers = require('../database/index.js');
 const postControllers = require('../database/controllers.js');
 
-app.use(express.static(`${__dirname}/../client/dist`));
+//app.use(express.static(`${__dirname}/../client/dist`)); //should be serving up the bundle from localhost:4043
+
+app.use(express.static(`${__dirname}/../client/dist`)); 
 // app.use((req, res, next) => {
 //   console.log(`${req.method} request received at ${req.url}`);
 //   next();
@@ -32,19 +40,20 @@ app.use(express.static(`${__dirname}/../client/dist`));
 //   });
 // });
 
-app.get('/product', (req, res) => {
-  console.log(req.query.id)
-  postControllers.getRelated(req.query.id, (err, results) => { //only retrieves from related items table
-    if (err) {
-      res.status(503).send(err);
-    } else {
-      console.log("results",results.rows)
-      return res.json({
-        data:results.rows, 
-      });
-    }
-  });
+app.get('/product', (req, res) => { //next file is inside the component.
+  postControllers.getRelated(req.query.id, (err, results) => {
+      if (err) {
+        res.status(503).send(err);
+      } else {    
+        return res.json({
+          data:results.rows, 
+        })
+      }
+    })
 });
+
+
+
 
 
 // app.post('/add',bodyParser(), (req, res) => { 

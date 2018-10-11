@@ -14,14 +14,16 @@ class RelatedItems extends Component {
   }
 
   componentDidMount() {
-    const id = window.location.search.replace(/\?id=/, '');
+    
+    const id = window.location.search.replace(/\?id=/, ''); //using the proxy so the proxy should proxy to my local hoe
     if (id) {
-      fetch(`/product?id=${id}`) //grabs all the products on the page
+      console.log(`/product/?id=${id}`)
+      fetch(`/product/?id=${id}`) //grabs all the products on the page
         .then(response => {
           return response.json()})
         .then(({data}) => {
           // data = JSON.parse(data)
-          console.log(data)
+          console.log("DATAAAA",data)
           const listOfItems = []; 
           let numOfItem = 6;
           if (data.length < 6) { numOfItem = data.length; }

@@ -1,4 +1,5 @@
-var connection = require('./connection.js');
+const client = require('./connection.js');
+//const redisConnect = require('../server/redisFile.js') //connection to redis 
 
 var insert = function(item, callback){
   //the item comes in like :
@@ -14,7 +15,7 @@ var insert = function(item, callback){
 	// }
   var query = `INSERT INTO prodschema.products(productName, productDescription, color, price, imageURL, rating, reviewNumber, isPrime) values 
                ('${item["productName"]}', '${item["productDescription"]}', '${item["color"]}', '${item["price"]}', '${item["imageURL"]}', '${item["rating"]}', '${item["reviewNumber"]}', '${item["isPrime"]}')`
-  connection.client.query(query, (err, res) => {
+  client.query(query, (err, res) => {
     if(err) {
 			callback(err, null);
     } else {
@@ -25,16 +26,18 @@ var insert = function(item, callback){
 
 var getRelated = function(id, callback){
 	var query = `SELECT prodschema.products .* FROM prodschema.products INNER JOIN prodschema.similaritems ON (products.id = similaritems.similarID) AND similaritems.id = ${id}`
-	connection.client.query(query, (err, res) => {
+	client.query(query, (err, res) => {
 		if(err) {
 			callback(err, null);
 		} else {
+      console.log(id) //making sure I'm putting just the double quotes...
+      //redisConnect.setex(id, 120000,JSON.stringify(res)) //cache it. keep it for 120000 time
 			callback(null, res);
 		}
 	})
 };
 
-//SELECT * FROM prodschema.products INNER JOIN prodschema.similaritems ON similaritems.similarID = products.id WHERE similaritems.id = ${id}
+// SELECT * FROM prodschema.products INNER JOIN prodschema.similaritems ON similaritems.similarID = products.id WHERE similaritems.id = ${id}
 //var filePaths = ['/Users/lisette/products1.csv', '/Users/lisette/products2.csv']; //I moved the files to where postgreSql is running 
 
 // import the files
@@ -95,7 +98,7 @@ const updateItem = (updateObj, callback) => {
   var fullQuery = "UPDATE prodschema.products SET " + valuesQuery +  " WHERE" + updateIdQuery +';';
 	
 	console.log(fullQuery);
-  connection.client.query(fullQuery, (err, results)=> {
+  client.query(fullQuery, (err, results)=> {
     if(err) {
       callback(err, null)
     } else {
