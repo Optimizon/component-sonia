@@ -3,8 +3,8 @@ config:
     maxErrorRate: 1
   target: 'http://localhost:4043'
   phases:
-    - duration: 60
-      arrivalRate: 5
+    - duration: 20
+      arrivalRate: 100
     #   rampTo: 2000
     # - duration: 60
     #   arrivalRate: 3500
@@ -20,14 +20,19 @@ config:
   #     - "keywords"        
 scenarios:
   - flow:
-    - loop: 
-      - get:
-          url: "/product/{{ $randomNumber(1, 10000) }}"
-      - get:
-          url: "/product/{{ $randomNumber(10000, 20000) }}"
-      - get:
-          url: "/product/{{ $randomNumber(20000, 30000) }}"
-        count: 500
+    # - loop: 
+       - get:
+           url: "/?id={{ $randomNumber(1, 10000) }}"
+        #  count: 5
+
+
+
+        
+      # - get:
+      #     url: "/product/{{ $randomNumber(10000, 20000) }}"
+      # - get:
+      #     url: "/product/{{ $randomNumber(20000, 30000) }}"
+  
    
 
 # config:

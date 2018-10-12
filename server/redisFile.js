@@ -1,13 +1,10 @@
 // redisDemo.js
 const express = require('express');
-
-
-
 const redis = require('redis');
 //const REDIS_PORT = process.env.REDIS_PORT;
 
 const app = express();
-const client = redis.createClient(); //used to be REDIS_PORT
+const client = redis.createClient(6379, 'ec2-54-153-31-183.us-west-1.compute.amazonaws.com'); //used to be REDIS_PORT
 
 
 client.on('connect', function() {
@@ -21,3 +18,6 @@ module.exports = client;
 
 // /etc/init.d/redis-server stop
 // /etc/init.d/redis-server start
+
+
+///etc/nginx

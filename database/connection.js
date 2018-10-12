@@ -9,8 +9,11 @@
 const { Client } = require('pg');
 const client = new Client({
   user: 'other_user',
-  host: 'ec2-54-67-17-11.us-west-1.compute.amazonaws.com', //connecting to the postgresql remote DB
+ 
+   host: 'ec2-54-67-17-11.us-west-1.compute.amazonaws.com', //connecting to the postgresql remote DB
+ // host: 'localhost',
   password: '1',
+ // database:'slideShowData',
   database: 'amzproducts',
   port: 5432
 });

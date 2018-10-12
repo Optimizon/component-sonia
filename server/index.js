@@ -1,7 +1,7 @@
 require('newrelic');
 require('dotenv').config();
 const cors = require('cors');
-//const client = require('./redisFile.js')  //Going to connect to Redis 
+const client = require('./redisFile.js')  //Going to connect to Redis 
 const postgres = require('../database/connection.js');
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -16,6 +16,10 @@ app.use(cors());
 
 //const controllers = require('../database/index.js');
 const postControllers = require('../database/controllers.js');
+
+app.use('/loaderio-be963b3932487b936e769094b8e69ce8', (req, res) => {
+  res.sendFile(__dirname + '/loaderio-be963b3932487b936e769094b8e69ce8.txt');
+});
 
 //app.use(express.static(`${__dirname}/../client/dist`)); //should be serving up the bundle from localhost:4043
 
@@ -40,18 +44,44 @@ app.use(express.static(`${__dirname}/../client/dist`));
 //   });
 // });
 
-app.get('/product', (req, res) => { //next file is inside the component.
-  postControllers.getRelated(req.query.id, (err, results) => {
+// app.get('/product', (req, res) => { //next file is inside the component.
+//   postControllers.getRelated(req.query.id, (err, results) => {
+//       if (err) {
+        
+//         res.status(503).send(err);
+//       } else {   
+      
+//         return res.json({
+//           data:results.rows, 
+//         })
+//       }
+//     })
+// });
+
+app.get('/product', (req, res) => { //if something gets to this route, I want it to check redis first 
+  console.log(req.query.id)
+  client.get(req.query.id, function(err, data) { //its going to try to find it in redis...
+    console.log(err, data)
+    if (err) throw err;
+    if (data != null) {
+        console.log("hit not null")
+        console.log(typeof JSON.parse(data));
+        res.send({"data": JSON.parse(data).rows}); //if it doesn't find it go into the DB
+    } else {
+  postControllers.getRelated(req.query.id, (err, results) => { //only retrieves from related items table
       if (err) {
         res.status(503).send(err);
-      } else {    
+      } else {
+        console.log("results",results.rows)
+        //console.log("typeof", typeof results) you get an object back from the DB...
         return res.json({
           data:results.rows, 
         })
       }
-    })
+  })
+}
+  })
 });
-
 
 
 

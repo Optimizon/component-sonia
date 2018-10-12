@@ -1,5 +1,5 @@
 const client = require('./connection.js');
-//const redisConnect = require('../server/redisFile.js') //connection to redis 
+const redisConnect = require('../server/redisFile.js') //connection to redis 
 
 var insert = function(item, callback){
   //the item comes in like :
@@ -30,8 +30,8 @@ var getRelated = function(id, callback){
 		if(err) {
 			callback(err, null);
 		} else {
-      console.log(id) //making sure I'm putting just the double quotes...
-      //redisConnect.setex(id, 120000,JSON.stringify(res)) //cache it. keep it for 120000 time
+      //making sure I'm putting just the double quotes...
+      redisConnect.setex(id, 120000,JSON.stringify(res)) //cache it. keep it for 120000 time
 			callback(null, res);
 		}
 	})
