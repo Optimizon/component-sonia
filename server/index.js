@@ -17,8 +17,9 @@ app.use(cors());
 //const controllers = require('../database/index.js');
 const postControllers = require('../database/controllers.js');
 
-app.use('/loaderio-be963b3932487b936e769094b8e69ce8', (req, res) => {
-  res.sendFile(__dirname + '/loaderio-be963b3932487b936e769094b8e69ce8.txt');
+app.use('/loaderio-8d75cab8686bb0ca18cb9fe42c3716a5', (req, res) => {
+  console.log("received: ", res)
+  res.sendFile(__dirname + '/loaderio-8d75cab8686bb0ca18cb9fe42c3716a5.txt');
 });
 
 //app.use(express.static(`${__dirname}/../client/dist`)); //should be serving up the bundle from localhost:4043
